@@ -1,0 +1,449 @@
+/* ============================================
+   MageLord - Global Styles & Layout
+   Theme: Black (#0a0a0a) & Gold (#d4af37)
+   ============================================ */
+
+/* CSS Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: #0a0a0a;
+  color: #d4af37;
+  overflow-x: hidden;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #d4af37;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+a {
+  color: #d4af37;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Main Grid Layout - Desktop (3 columns) */
+.app-container {
+  display: grid;
+  grid-template-columns: 15% 70% 15%;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    "header header header"
+    "nav nav nav"
+    "sidebar-left main sidebar-right"
+    "footer footer footer";
+  min-height: 100vh;
+  gap: 0;
+}
+
+/* Header - Fixed at top */
+.header {
+  grid-area: header;
+  background-color: #0a0a0a;
+  border-bottom: 2px solid #d4af37;
+  padding: 1.5rem 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Navbar - Sticky below header */
+.navbar {
+  grid-area: nav;
+  background-color: #141414;
+  border-bottom: 1px solid #d4af37;
+  padding: 0.75rem 2rem;
+  position: sticky;
+  top: 5rem; /* Adjust based on header height */
+  z-index: 999;
+  margin-top: 5rem; /* Space for fixed header */
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.navbar li {
+  display: inline-block;
+}
+
+.navbar a {
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.navbar a:hover {
+  border-color: #d4af37;
+  background-color: rgba(212, 175, 55, 0.1);
+  opacity: 1;
+}
+
+/* Hidden navbar links for view A (shown in view B) */
+.navbar-extended {
+  display: none;
+}
+
+/* Sidebars */
+.sidebar-left {
+  grid-area: sidebar-left;
+  background-color: #0f0f0f;
+  border-right: 1px solid #d4af37;
+  padding: 1.5rem 1rem;
+}
+
+.sidebar-right {
+  grid-area: sidebar-right;
+  background-color: #0f0f0f;
+  border-left: 1px solid #d4af37;
+  padding: 1.5rem 1rem;
+}
+
+.sidebar-section {
+  background-color: #141414;
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-section h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #d4af37;
+  padding-bottom: 0.5rem;
+}
+
+/* Main Content Area */
+.main-content {
+  grid-area: main;
+  background-color: #0a0a0a;
+  padding: 2rem;
+  min-height: calc(100vh - 12rem);
+}
+
+/* Footer */
+.footer {
+  grid-area: footer;
+  background-color: #141414;
+  border-top: 2px solid #d4af37;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #141414;
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  color: #d4af37;
+  font-size: 1rem;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+/* Buttons */
+.btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #d4af37;
+  color: #0a0a0a;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn:hover {
+  background-color: #c49f2f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #d4af37;
+  border: 2px solid #d4af37;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(212, 175, 55, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Cards & Containers */
+.card {
+  background-color: #141414;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card h2,
+.card h3 {
+  margin-top: 0;
+}
+
+/* View Toggle */
+.view-a {
+  display: block;
+}
+
+.view-b {
+  display: none;
+}
+
+/* Welcome Section (View A) */
+.welcome-section {
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.welcome-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.welcome-section p {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  color: rgba(212, 175, 55, 0.8);
+}
+
+.auth-form {
+  max-width: 400px;
+  margin: 2rem auto;
+  background-color: #141414;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.auth-form h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.form-actions .btn {
+  flex: 1;
+}
+
+/* Dashboard Section (View B) */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.stat-box {
+  background-color: #141414;
+  border: 1px solid #d4af37;
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-box .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+
+.stat-box .stat-label {
+  font-size: 0.875rem;
+  color: rgba(212, 175, 55, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* News Feed */
+.news-feed {
+  margin-top: 2rem;
+}
+
+.news-item {
+  background-color: #141414;
+  border: 1px solid #d4af37;
+  border-left: 4px solid #d4af37;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.news-item .news-date {
+  font-size: 0.75rem;
+  color: rgba(212, 175, 55, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.news-item h4 {
+  margin: 0.5rem 0;
+  font-size: 1.125rem;
+}
+
+.news-item p {
+  margin: 0;
+  color: rgba(212, 175, 55, 0.8);
+}
+
+/* Responsive Design - Mobile (<768px) */
+@media screen and (max-width: 768px) {
+  .app-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "nav"
+      "main"
+      "footer";
+  }
+
+  /* Hide sidebars on mobile */
+  .sidebar-left,
+  .sidebar-right {
+    display: none;
+  }
+
+  .header {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.75rem;
+  }
+
+  .navbar {
+    padding: 0.5rem 1rem;
+    margin-top: 4rem; /* Adjust for smaller header */
+    top: 4rem;
+  }
+
+  .navbar ul {
+    gap: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+/* Tablet (768px - 1024px) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .app-container {
+    grid-template-columns: 20% 60% 20%;
+  }
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.mt-2 {
+  margin-top: 2rem;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 2rem;
+}
+
+.hidden {
+  display: none;
+}
