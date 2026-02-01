@@ -2,7 +2,7 @@
 
 /**
  * game-footer.tsx
- * Responsabilidad: Footer interactivo con 3 bloques: Monitor de Estado, Recursos y Comunidad, Seguridad y Soporte.
+ * Footer modificado: sin foro, con cookies, y contenido que no requiere login
  */
 
 import { useState, useEffect } from "react"
@@ -10,13 +10,14 @@ import {
   Clock,
   Users,
   BookOpen,
-  MessageSquare,
   FileText,
   Github,
   Shield,
   FileWarning,
   Scroll,
   Mail,
+  Cookie,
+  Info,
 } from "lucide-react"
 import type { Language } from "@/lib/i18n"
 import { useTranslation } from "@/lib/i18n"
@@ -67,7 +68,8 @@ export function GameFooter({ language = "es", onPageChange }: GameFooterProps) {
     <footer className="border-t border-[#d4af37]/20 bg-gradient-to-b from-black/95 to-black py-12">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-          {/* Bloque Izquierdo: Monitor de Estado */}
+          
+          {/* ========== BLOQUE 1: MONITOR DE ESTADO ========== */}
           <div className="space-y-5">
             <h3 className="text-xl font-bold text-[#d4af37] mb-6 flex items-center gap-2 border-b border-[#d4af37]/30 pb-3">
               <Clock className="h-6 w-6" />
@@ -89,7 +91,7 @@ export function GameFooter({ language = "es", onPageChange }: GameFooterProps) {
               className="w-full text-left hover:translate-x-1 transition-all duration-200"
             >
               <div className="flex items-center justify-between text-[#d4af37]/90 hover:text-[#d4af37]">
-                <span className="text-sm">Próximo turno en:</span>
+                <span className="text-sm">Próximo Turno en:</span>
                 <span className="font-mono font-semibold">{formatCountdown(nextTurnIn)}</span>
               </div>
             </button>
@@ -99,7 +101,7 @@ export function GameFooter({ language = "es", onPageChange }: GameFooterProps) {
               className="w-full text-left hover:translate-x-1 transition-all duration-200"
             >
               <div className="flex items-center justify-between text-[#d4af37]/90 hover:text-[#d4af37]">
-                <span className="text-sm">Versión:</span>
+                <span className="text-sm">Versión del Juego:</span>
                 <span className="font-mono font-semibold">v0.8.4-Alpha</span>
               </div>
             </button>
@@ -108,19 +110,21 @@ export function GameFooter({ language = "es", onPageChange }: GameFooterProps) {
               onClick={() => handleFooterClick("population")}
               className="w-full text-left hover:translate-x-1 transition-all duration-200"
             >
-              <div className="flex items-center gap-2 text-[#d4af37]/90 hover:text-[#d4af37]">
-                <Users className="h-4 w-4 text-green-500" />
-                <span className="text-sm">Estado:</span>
-                <span className="text-green-500 font-semibold">1,240 Online</span>
+              <div className="flex items-center justify-between text-[#d4af37]/90 hover:text-[#d4af37]">
+                <span className="text-sm flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  Jugadores Online:
+                </span>
+                <span className="font-mono font-semibold text-green-400">1,240</span>
               </div>
             </button>
           </div>
 
-          {/* Bloque Central: Recursos y Comunidad */}
+          {/* ========== BLOQUE 2: INFORMACIÓN Y RECURSOS ========== */}
           <div className="space-y-5">
             <h3 className="text-xl font-bold text-[#d4af37] mb-6 flex items-center gap-2 border-b border-[#d4af37]/30 pb-3">
               <BookOpen className="h-6 w-6" />
-              Recursos y Comunidad
+              Información y Recursos
             </h3>
 
             <button
@@ -132,11 +136,11 @@ export function GameFooter({ language = "es", onPageChange }: GameFooterProps) {
             </button>
 
             <button
-              onClick={() => handleFooterClick("tavern")}
+              onClick={() => handleFooterClick("about")}
               className="w-full text-left flex items-center gap-3 text-[#d4af37]/90 hover:text-[#d4af37] hover:translate-x-1 transition-all duration-200"
             >
-              <MessageSquare className="h-4 w-4" />
-              <span className="text-sm">Foro de la Taberna</span>
+              <Info className="h-4 w-4" />
+              <span className="text-sm">Acerca del Juego</span>
             </button>
 
             <button
@@ -152,23 +156,23 @@ export function GameFooter({ language = "es", onPageChange }: GameFooterProps) {
               className="w-full text-left flex items-center gap-3 text-[#d4af37]/90 hover:text-[#d4af37] hover:translate-x-1 transition-all duration-200"
             >
               <Github className="h-4 w-4" />
-              <span className="text-sm">Discord / Redes</span>
+              <span className="text-sm">Discord / Redes Sociales</span>
             </button>
           </div>
 
-          {/* Bloque Derecho: Seguridad y Soporte */}
+          {/* ========== BLOQUE 3: SEGURIDAD Y LEGAL ========== */}
           <div className="space-y-5">
             <h3 className="text-xl font-bold text-[#d4af37] mb-6 flex items-center gap-2 border-b border-[#d4af37]/30 pb-3">
               <Shield className="h-6 w-6" />
-              Seguridad y Soporte
+              Seguridad y Legal
             </h3>
 
             <button
               onClick={() => handleFooterClick("terms")}
               className="w-full text-left flex items-center gap-3 text-[#d4af37]/90 hover:text-[#d4af37] hover:translate-x-1 transition-all duration-200"
             >
-              <Scroll className="h-4 w-4" />
-              <span className="text-sm">Términos y Condiciones</span>
+              <FileWarning className="h-4 w-4" />
+              <span className="text-sm">Términos de Servicio</span>
             </button>
 
             <button
@@ -180,11 +184,19 @@ export function GameFooter({ language = "es", onPageChange }: GameFooterProps) {
             </button>
 
             <button
+              onClick={() => handleFooterClick("cookies")}
+              className="w-full text-left flex items-center gap-3 text-[#d4af37]/90 hover:text-[#d4af37] hover:translate-x-1 transition-all duration-200"
+            >
+              <Cookie className="h-4 w-4" />
+              <span className="text-sm">Política de Cookies</span>
+            </button>
+
+            <button
               onClick={() => handleFooterClick("conduct")}
               className="w-full text-left flex items-center gap-3 text-[#d4af37]/90 hover:text-[#d4af37] hover:translate-x-1 transition-all duration-200"
             >
-              <FileWarning className="h-4 w-4" />
-              <span className="text-sm">Normas de Conducta</span>
+              <Scroll className="h-4 w-4" />
+              <span className="text-sm">Código de Conducta</span>
             </button>
 
             <button
@@ -192,14 +204,18 @@ export function GameFooter({ language = "es", onPageChange }: GameFooterProps) {
               className="w-full text-left flex items-center gap-3 text-[#d4af37]/90 hover:text-[#d4af37] hover:translate-x-1 transition-all duration-200"
             >
               <Mail className="h-4 w-4" />
-              <span className="text-sm">Contacto / Soporte</span>
+              <span className="text-sm">Soporte Técnico</span>
             </button>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-[#d4af37]/10 text-center">
-          <p className="text-sm text-[#d4af37]/60">© 2025 MageLord - Todos los derechos reservados</p>
+        {/* ========== COPYRIGHT ========== */}
+        <div className="mt-12 pt-8 border-t border-[#d4af37]/20 text-center">
+          <p className="text-[#d4af37]/60 text-sm">
+            © 2025 MageLord - Todos los derechos reservados
+            <span className="mx-2">•</span>
+            Un juego de estrategia medieval MMO
+          </p>
         </div>
       </div>
     </footer>
