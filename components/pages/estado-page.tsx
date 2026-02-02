@@ -123,6 +123,44 @@ const EstadoPage = ({ gameState, language }: EstadoPageProps) => {
   const estimatedTaxIncome = Math.floor((toNumber(gameState.population) * toNumber(taxRate)) / 100)
   const taxStatus = getTaxRateStatus(toNumber(taxRate), language)
 
+  // Calcular tiempo restante de protección de novato
+  const calculateProtectionRemaining = () => {
+    if (!gameState?.protection_expires) {
+      return { isProtected: false, timeRemaining: "" }
+    }
+    
+    const expirationDate = new Date(gameState.protection_expires)
+    const now = new Date()
+    
+    if (now >= expirationDate) {
+      return { isProtected: false, timeRemaining: "" }
+    }
+    
+    const diffMs = expirationDate.getTime() - now.getTime()
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+    const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
+    
+    let timeStr = ""
+    if (diffDays > 0) {
+      timeStr = language === "es" 
+        ? `${diffDays} día${diffDays > 1 ? 's' : ''}, ${diffHours} hora${diffHours !== 1 ? 's' : ''}`
+        : `${diffDays} day${diffDays > 1 ? 's' : ''}, ${diffHours} hour${diffHours !== 1 ? 's' : ''}`
+    } else if (diffHours > 0) {
+      timeStr = language === "es"
+        ? `${diffHours} hora${diffHours !== 1 ? 's' : ''}, ${diffMinutes} minuto${diffMinutes !== 1 ? 's' : ''}`
+        : `${diffHours} hour${diffHours !== 1 ? 's' : ''}, ${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''}`
+    } else {
+      timeStr = language === "es"
+        ? `${diffMinutes} minuto${diffMinutes !== 1 ? 's' : ''}`
+        : `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''}`
+    }
+    
+    return { isProtected: true, timeRemaining: timeStr }
+  }
+  
+  const protection = calculateProtectionRemaining()
+
   const faction = gameState.faction as Faction
   const factionData = faction ? FACTIONS[faction] : null
 

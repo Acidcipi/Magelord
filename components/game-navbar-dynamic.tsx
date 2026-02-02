@@ -5,7 +5,7 @@
  */
 
 import { Button } from "@/components/ui/button"
-import { LogOut, ChevronDown } from "lucide-react"
+import { LogOut, ChevronDown, Shield } from "lucide-react"
 import { LanguageSelector } from "@/components/language-selector"
 import type { Language } from "@/lib/i18n"
 import { useTranslation } from "@/lib/i18n"
@@ -275,47 +275,6 @@ export function GameNavbarDynamic({
             {t.profile}
           </Button>
 
-          {/* OWNER Panel Dropdown */}
-          {userRoles.includes("owner") && (
-            <div className="relative" onMouseEnter={() => handleMouseEnter("owner")} onMouseLeave={handleMouseLeave}>
-              <Button
-                variant="ghost"
-                className="text-green-500 hover:bg-green-500/10 flex items-center gap-1 font-bold"
-              >
-                Owner
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-              {openMenu === "owner" && (
-                <div className="absolute top-full left-0 mt-1 w-56 bg-[#1a1a1a] border border-green-500/30 rounded-md shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <button
-                    onClick={() => setActivePage("owner-noticias")}
-                    className="w-full text-left px-4 py-2 text-green-500 hover:bg-green-500/10 transition-colors"
-                  >
-                    Gestionar Noticias
-                  </button>
-                  <button
-                    onClick={() => setActivePage("owner-anuncios")}
-                    className="w-full text-left px-4 py-2 text-green-500 hover:bg-green-500/10 transition-colors"
-                  >
-                    Anuncios Globales
-                  </button>
-                  <button
-                    onClick={() => setActivePage("owner-jugadores")}
-                    className="w-full text-left px-4 py-2 text-green-500 hover:bg-green-500/10 transition-colors"
-                  >
-                    Gestionar Jugadores
-                  </button>
-                  <button
-                    onClick={() => setActivePage("owner-logs")}
-                    className="w-full text-left px-4 py-2 text-green-500 hover:bg-green-500/10 transition-colors"
-                  >
-                    Logs del Sistema
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
           {/* WEB ADMIN Panel Dropdown */}
           {userRoles.includes("web_admin") && (
             <div className="relative" onMouseEnter={() => handleMouseEnter("webadmin")} onMouseLeave={handleMouseLeave}>
@@ -344,7 +303,32 @@ export function GameNavbarDynamic({
         </div>
 
         {/* Right side: Language + Logout */}
+        {/* Right side: Username + Admin Panel + Language + Logout */}
         <div className="flex items-center gap-3">
+          {/* Nombre de usuario */}
+          <span className="text-[#d4af37] font-semibold hidden md:inline">
+            {username}
+          </span>
+
+          {/* Botón Panel Admin (solo para admin+) */}
+          {(userRoles.includes("web_admin") || userRoles.includes("admin") || userRoles.includes("owner")) && (
+            <Button
+              onClick={() => setActivePage("admin-dashboard")}
+              variant="outline"
+              size="sm"
+              className={`${
+                userRoles.includes("owner") 
+                  ? "border-green-500 text-green-400 hover:bg-green-500/10" 
+                  : userRoles.includes("admin")
+                  ? "border-red-500 text-red-400 hover:bg-red-500/10"
+                  : "border-blue-500 text-blue-400 hover:bg-blue-500/10"
+              }`}
+            >
+              <Shield className="mr-2 h-4 w-4" />
+              Panel Admin
+            </Button>
+          )}
+
           <LanguageSelector currentLang={language} onLanguageChange={setLanguage} />
           <Button
             variant="outline"

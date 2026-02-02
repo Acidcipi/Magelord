@@ -3,7 +3,6 @@
 import type React from "react"
 import PortadaPage from "@/components/pages/portada-page"
 import NoticiasPage from "@/components/pages/noticias-page"
-import FooterContentPage from "@/components/pages/footer-content-page"
 import { supabase } from "@/lib/supabaseClient"
 
 /**

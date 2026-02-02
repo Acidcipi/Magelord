@@ -1,10 +1,42 @@
+/* ============================================================================
+   MAGELORD - MERCADO NEGRO (HUB PRINCIPAL)
+   ============================================================================
+   
+   Página principal del Mercado Negro que muestra las 6 secciones disponibles.
+   Los usuarios pueden hacer clic en una sección para navegar a ella.
+   
+   Secciones disponibles:
+   1. Tienda de Artefactos - Armas y armaduras mágicas
+   2. Taberna - Mercenarios y espías
+   3. Criadero - Criaturas míticas
+   4. Tienda Exótica - Objetos raros
+   5. Salón de Héroes - Héroes legendarios
+   6. Altar de los Dioses - Bendiciones divinas
+   
+   Autor: MageLord Team
+   Última actualización: 2026-02-01
+   
+   ============================================================================ */
+
 "use client"
 
 import { useState } from "react"
 import { useTranslation, type Language } from "@/lib/i18n"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Skull, Swords, AlertTriangle, Gem, Beer, Egg, Sparkles, Crown, Church } from "lucide-react"
+import { Skull, Swords, AlertTriangle, Gem, Beer, Egg, Sparkles, Crown, Church, ArrowLeft } from "lucide-react"
+
+// Importar las secciones individuales
+import { TiendaArtefactos } from "@/components/mercado-negro/tienda-artefactos"
+import { Taberna } from "@/components/mercado-negro/taberna"
+import { Criadero } from "@/components/mercado-negro/criadero"
+import { TiendaExotica } from "@/components/mercado-negro/tienda-exotica"
+import { SalonHeroes } from "@/components/mercado-negro/salon-heroes"
+import { AltarDioses } from "@/components/mercado-negro/altar-dioses"
+
+/* ============================================================================
+   TIPOS Y INTERFACES
+   ============================================================================ */
 
 interface MercadoNegroPageProps {
   language: Language
@@ -30,10 +62,18 @@ interface BlackMarketCard {
   icon: any
 }
 
+/* ============================================================================
+   COMPONENTE PRINCIPAL
+   ============================================================================ */
+
 export function MercadoNegroPage({ language, province, user, gameState }: MercadoNegroPageProps) {
   const t = useTranslation(language)
   const [activeSection, setActiveSection] = useState<BlackMarketSection>(null)
 
+  /* ==========================================================================
+     CONFIGURACIÓN DE SECCIONES
+     ========================================================================== */
+  
   const sections: BlackMarketCard[] = [
     {
       id: "tienda-artefactos",
@@ -89,44 +129,43 @@ export function MercadoNegroPage({ language, province, user, gameState }: Mercad
     },
   ]
 
+  /* ==========================================================================
+     RENDERIZADO DE SECCIÓN ACTIVA
+     ========================================================================== */
+  
   const renderSectionContent = () => {
     if (!activeSection) return null
 
-    const currentSection = sections.find((s) => s.id === activeSection)
-    if (!currentSection) return null
+    const props = { language, province, user, gameState }
 
-    return (
-      <div className="space-y-6">
-        {/* Section Header */}
-        <div className="flex items-center gap-3">
-          <currentSection.icon className="h-8 w-8 text-[#d4af37]" />
-          <div>
-            <h2 className="text-2xl font-bold text-[#d4af37]">{currentSection.name}</h2>
-            <p className="text-sm text-gray-400">{currentSection.description}</p>
-          </div>
-        </div>
-
-        {/* Under Construction */}
-        <Card className="bg-gray-900/50 border-2 border-yellow-500/30 p-12">
-          <div className="text-center space-y-4">
-            <AlertTriangle className="h-16 w-16 text-yellow-500 mx-auto" />
-            <h3 className="text-2xl font-bold text-yellow-500">
-              {language === "es" ? "En Construcción" : "Under Construction"}
-            </h3>
-            <p className="text-gray-400 max-w-md mx-auto">
-              {language === "es"
-                ? "Esta sección del Mercado Negro estará disponible próximamente. Prepara tu oro y regresa pronto."
-                : "This section of the Black Market will be available soon. Prepare your gold and return soon."}
-            </p>
-          </div>
-        </Card>
-      </div>
-    )
+    switch (activeSection) {
+      case "tienda-artefactos":
+        return <TiendaArtefactos {...props} />
+      case "taberna":
+        return <Taberna {...props} />
+      case "criadero":
+        return <Criadero {...props} />
+      case "tienda-exotica":
+        return <TiendaExotica {...props} />
+      case "salon-heroes":
+        return <SalonHeroes {...props} />
+      case "altar-dioses":
+        return <AltarDioses {...props} />
+      default:
+        return null
+    }
   }
+
+  /* ==========================================================================
+     RENDER DEL HUB PRINCIPAL
+     ========================================================================== */
 
   return (
     <div className="space-y-6">
-      {/* Header with Dark Theme */}
+      {/* ====================================================================
+          HEADER - Banner principal del Mercado Negro
+          ==================================================================== */}
+      
       <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 border border-gray-700/50 rounded-lg p-6 shadow-2xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -145,6 +184,10 @@ export function MercadoNegroPage({ language, province, user, gameState }: Mercad
         </div>
       </div>
 
+      {/* ====================================================================
+          NAVEGACIÓN DE SECCIONES (solo visible cuando hay sección activa)
+          ==================================================================== */}
+      
       {activeSection && (
         <div className="bg-black/40 border border-gray-700/50 rounded-lg p-2">
           <div className="flex flex-wrap gap-2">
@@ -165,17 +208,22 @@ export function MercadoNegroPage({ language, province, user, gameState }: Mercad
             <Button
               onClick={() => setActiveSection(null)}
               variant="ghost"
-              className="ml-auto text-gray-400 hover:text-white"
+              className="ml-auto text-gray-400 hover:text-white flex items-center gap-2"
             >
-              {language === "es" ? "← Volver" : "← Back"}
+              <ArrowLeft className="h-4 w-4" />
+              {language === "es" ? "Volver" : "Back"}
             </Button>
           </div>
         </div>
       )}
 
+      {/* ====================================================================
+          CONTENIDO PRINCIPAL
+          ==================================================================== */}
+      
       {!activeSection ? (
         <>
-          {/* Info Panel */}
+          {/* INFO PANEL - Información sobre el Mercado Negro */}
           <Card className="bg-gray-900/90 border-gray-700/50 p-4 shadow-xl">
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-6 w-6 text-yellow-500 flex-shrink-0" />
@@ -208,6 +256,7 @@ export function MercadoNegroPage({ language, province, user, gameState }: Mercad
             </div>
           </Card>
 
+          {/* GRID DE SECCIONES - Tarjetas clickeables */}
           <div className="space-y-3">
             <h3 className="text-xl font-semibold text-gray-300 flex items-center gap-2">
               <Swords className="h-6 w-6" />
@@ -223,7 +272,7 @@ export function MercadoNegroPage({ language, province, user, gameState }: Mercad
                     onClick={() => setActiveSection(section.id)}
                     className="relative overflow-hidden border-2 border-[#d4af37]/30 hover:border-[#d4af37] cursor-pointer transition-all hover:scale-[1.02] bg-gradient-to-br from-gray-900 to-black"
                   >
-                    {/* Image */}
+                    {/* Imagen de fondo */}
                     <div
                       className="h-48 bg-cover bg-center relative"
                       style={{ backgroundImage: `url(${section.image})` }}
@@ -235,7 +284,7 @@ export function MercadoNegroPage({ language, province, user, gameState }: Mercad
                       </div>
                     </div>
 
-                    {/* Content */}
+                    {/* Contenido de la tarjeta */}
                     <div className="p-4">
                       <p className="text-sm text-gray-400 mb-4">{section.description}</p>
 
@@ -258,6 +307,7 @@ export function MercadoNegroPage({ language, province, user, gameState }: Mercad
           </div>
         </>
       ) : (
+        /* CONTENIDO DE SECCIÓN ACTIVA */
         renderSectionContent()
       )}
     </div>

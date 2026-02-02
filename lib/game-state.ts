@@ -36,6 +36,9 @@ export interface GameState {
   population: number
   health: number
   morale: number
+  tax_rate: number
+  next_turn_at: string
+  protection_expires: string
 
   population_civilians: number
   population_military: number
@@ -114,7 +117,7 @@ export interface ProvinceUnit {
  */
 export async function fetchGameState(userId: string): Promise<GameState | null> {
   try {
-    console.log("[v0] 🔍 Fetching game state for user_id:", userId)
+    console.log("[v0] ðŸ” Fetching game state for user_id:", userId)
 
     const userIdString = String(userId)
 
@@ -125,11 +128,11 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
       .single()
 
     if (userError || !userData) {
-      console.error("[v0] ❌ User not found:", userError?.message)
+      console.error("[v0] âŒ User not found:", userError?.message)
       return null
     }
 
-    console.log("[v0] ✅ User data loaded:", {
+    console.log("[v0] âœ… User data loaded:", {
       username: userData.username,
       role: userData.role,
       faction: userData.faction,
@@ -137,22 +140,22 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
       alignment: userData.alignment,
     })
 
-    console.log("[v0] ✅ User found:", userData.username, "| Role:", userData.role)
+    console.log("[v0] âœ… User found:", userData.username, "| Role:", userData.role)
 
     const { data: provinceData, error: provinceError } = await supabase
       .from("provinces")
       .select(
-        "id, name, networth, land, gold, mana, food, turns, max_turns, last_update, population, health, morale, magic_level",
+        "id, name, networth, land, gold, mana, food, turns, max_turns, last_update, population, health, morale, magic_level, tax_rate, next_turn_at, protection_expires",
       )
       .eq("user_id", userData.id)
       .single()
 
     if (provinceError || !provinceData) {
-      console.error("[v0] ❌ Province not found:", provinceError?.message)
+      console.error("[v0] âŒ Province not found:", provinceError?.message)
       return null
     }
 
-    console.log("[v0] 🏰 Province found:", provinceData.name)
+    console.log("[v0] ðŸ° Province found:", provinceData.name)
 
     const provinceIdString = String(provinceData.id)
 
@@ -173,9 +176,9 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
     }
 
     if (buildingsData) {
-      console.log("[v0] 🏗️ Buildings loaded:", buildingsMap)
+      console.log("[v0] ðŸ—ï¸ Buildings loaded:", buildingsMap)
     } else {
-      console.warn("[v0] ⚠️ Buildings not found, using defaults")
+      console.warn("[v0] âš ï¸ Buildings not found, using defaults")
     }
 
     let totalAttack = 0
@@ -183,16 +186,16 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
 
     console.log("[v0] ID BUSCADO:", provinceIdString)
 
-    console.log("[v0] 🔍 Fetching province_units with province_id:", provinceIdString)
+    console.log("[v0] ðŸ” Fetching province_units with province_id:", provinceIdString)
     const { data: provinceUnitsData } = await supabase
       .from("province_units")
       .select("unit_id, quantity, defense_assignment_pct")
       .eq("province_id", provinceIdString)
 
-    console.log("[v0] 📦 Province units data:", provinceUnitsData)
+    console.log("[v0] ðŸ“¦ Province units data:", provinceUnitsData)
 
     if (!provinceUnitsData || provinceUnitsData.length === 0) {
-      console.warn("[v0] ⚠️ No se encontraron filas en la DB para este ID:", provinceIdString)
+      console.warn("[v0] âš ï¸ No se encontraron filas en la DB para este ID:", provinceIdString)
     }
 
     const processedUnits: any[] = []
@@ -200,13 +203,13 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
     if (provinceUnitsData && provinceUnitsData.length > 0) {
       const unitIds = provinceUnitsData.map((pu: any) => pu.unit_id)
 
-      console.log("[v0] 🔍 Fetching master_units for specific IDs:", unitIds.length)
+      console.log("[v0] ðŸ” Fetching master_units for specific IDs:", unitIds.length)
       const { data: masterUnitsData } = await supabase
         .from("master_units")
         .select("id, name, attack, defense, tier")
         .in("id", unitIds)
 
-      console.log("[v0] 📚 Master units data:", masterUnitsData?.length, "units")
+      console.log("[v0] ðŸ“š Master units data:", masterUnitsData?.length, "units")
 
       if (masterUnitsData && masterUnitsData.length > 0) {
         provinceUnitsData.forEach((provinceUnit: any) => {
@@ -240,15 +243,15 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
               tier: masterUnit.tier,
             })
 
-            console.log(`[v0] ⚔️ Unit ${masterUnit.name}: ${quantity}x (Atk: ${attack}, Def: ${defense})`)
+            console.log(`[v0] âš”ï¸ Unit ${masterUnit.name}: ${quantity}x (Atk: ${attack}, Def: ${defense})`)
           } else {
-            console.warn(`[v0] ⚠️ Master unit not found for unit_id: ${unitId}`)
+            console.warn(`[v0] âš ï¸ Master unit not found for unit_id: ${unitId}`)
           }
         })
-        console.log("[v0] ⚔️ Total Attack:", totalAttack, "| Total Defense:", totalDefense)
+        console.log("[v0] âš”ï¸ Total Attack:", totalAttack, "| Total Defense:", totalDefense)
       }
     } else {
-      console.log("[v0] 📭 No units found")
+      console.log("[v0] ðŸ“­ No units found")
     }
 
     const totalPopulation = provinceData.population || 0
@@ -303,6 +306,9 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
       morale: provinceData.morale || 100,
       magic_level: provinceData.magic_level || 1,
       academy_level: 1, // Default value since column doesn't exist in DB
+      tax_rate: provinceData.tax_rate || 15,
+      next_turn_at: provinceData.next_turn_at || new Date().toISOString(),
+      protection_expires: provinceData.protection_expires || new Date().toISOString(),
 
       tier1_units: 0,
       tier2_units: 0,
@@ -327,12 +333,12 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
       buildings: buildingsMap,
     }
 
-    console.log("[v0] ✅ Game state loaded successfully")
-    console.log("[v0] 👑 Acceso concedido como:", gameState.role)
+    console.log("[v0] âœ… Game state loaded successfully")
+    console.log("[v0] ðŸ‘‘ Acceso concedido como:", gameState.role)
 
     return gameState
   } catch (error: any) {
-    console.error("[v0] 💥 Critical error in fetchGameState:", error)
+    console.error("[v0] ðŸ’¥ Critical error in fetchGameState:", error)
     return null
   }
 }
@@ -344,7 +350,7 @@ export async function fetchGameState(userId: string): Promise<GameState | null> 
  */
 export async function fetchMilitaryState(provinceId: string): Promise<MilitaryUnit[]> {
   try {
-    console.log("[v0] 🗡️ Fetching military state for province_id:", provinceId)
+    console.log("[v0] ðŸ—¡ï¸ Fetching military state for province_id:", provinceId)
 
     const provinceIdString = String(provinceId)
 
@@ -365,12 +371,12 @@ export async function fetchMilitaryState(provinceId: string): Promise<MilitaryUn
       .eq("province_id", provinceIdString)
 
     if (error) {
-      console.error("[v0] ❌ Error fetching military state:", error.message)
+      console.error("[v0] âŒ Error fetching military state:", error.message)
       return []
     }
 
     if (!data || data.length === 0) {
-      console.log("[v0] 📭 No units found for province")
+      console.log("[v0] ðŸ“­ No units found for province")
       return []
     }
 
@@ -386,10 +392,10 @@ export async function fetchMilitaryState(provinceId: string): Promise<MilitaryUn
       faction_restriction: item.master_units.faction_restriction,
     }))
 
-    console.log("[v0] ⚔️ Loaded", units.length, "unit types")
+    console.log("[v0] âš”ï¸ Loaded", units.length, "unit types")
     return units
   } catch (error: any) {
-    console.error("[v0] 💥 Critical error in fetchMilitaryState:", error)
+    console.error("[v0] ðŸ’¥ Critical error in fetchMilitaryState:", error)
     return []
   }
 }
@@ -438,7 +444,7 @@ export async function updateLastUpdate(provinceId: string): Promise<void> {
  */
 export async function fetchMasterUnits(faction: string): Promise<MasterUnit[]> {
   try {
-    console.log("[v0] 📚 Fetching master units for faction:", faction)
+    console.log("[v0] ðŸ“š Fetching master units for faction:", faction)
 
     const { data, error } = await supabase
       .from("master_units")
@@ -447,19 +453,19 @@ export async function fetchMasterUnits(faction: string): Promise<MasterUnit[]> {
       .order("tier")
 
     if (error) {
-      console.error("[v0] ❌ Error fetching master units:", error.message)
+      console.error("[v0] âŒ Error fetching master units:", error.message)
       return []
     }
 
     if (!data || data.length === 0) {
-      console.warn("[v0] ⚠️ No master units found for faction:", faction)
+      console.warn("[v0] âš ï¸ No master units found for faction:", faction)
       return []
     }
 
-    console.log("[v0] ✅ Loaded", data.length, "master units for faction:", faction)
+    console.log("[v0] âœ… Loaded", data.length, "master units for faction:", faction)
     return data as MasterUnit[]
   } catch (error: any) {
-    console.error("[v0] 💥 Critical error fetching master units:", error)
+    console.error("[v0] ðŸ’¥ Critical error fetching master units:", error)
     return []
   }
 }
@@ -469,7 +475,7 @@ export async function fetchMasterUnits(faction: string): Promise<MasterUnit[]> {
  */
 export async function fetchProvinceUnits(provinceId: string): Promise<ProvinceUnit[]> {
   try {
-    console.log("[v0] 🗡️ Fetching province units for province_id:", provinceId)
+    console.log("[v0] ðŸ—¡ï¸ Fetching province units for province_id:", provinceId)
 
     const provinceIdString = String(provinceId)
 
@@ -483,12 +489,12 @@ export async function fetchProvinceUnits(provinceId: string): Promise<ProvinceUn
       .eq("province_id", provinceIdString)
 
     if (error) {
-      console.error("[v0] ❌ Error fetching province units:", error.message)
+      console.error("[v0] âŒ Error fetching province units:", error.message)
       return []
     }
 
     if (!data || data.length === 0) {
-      console.log("[v0] 📭 No units found for province")
+      console.log("[v0] ðŸ“­ No units found for province")
       return []
     }
 
@@ -498,10 +504,10 @@ export async function fetchProvinceUnits(provinceId: string): Promise<ProvinceUn
       unit: item.master_units as MasterUnit,
     }))
 
-    console.log("[v0] ⚔️ Loaded", units.length, "unit types")
+    console.log("[v0] âš”ï¸ Loaded", units.length, "unit types")
     return units
   } catch (error: any) {
-    console.error("[v0] 💥 Critical error fetching province units:", error)
+    console.error("[v0] ðŸ’¥ Critical error fetching province units:", error)
     return []
   }
 }
@@ -513,7 +519,7 @@ export async function fetchProvinceUnits(provinceId: string): Promise<ProvinceUn
  */
 export async function fetchUserRanking(provinceId: string): Promise<number | null> {
   try {
-    console.log("[v0] 📊 Fetching ranking for province_id:", provinceId)
+    console.log("[v0] ðŸ“Š Fetching ranking for province_id:", provinceId)
 
     const provinceIdString = String(provinceId)
 
@@ -523,7 +529,7 @@ export async function fetchUserRanking(provinceId: string): Promise<number | nul
       .order("networth", { ascending: false })
 
     if (error) {
-      console.error("[v0] ❌ Error fetching rankings:", error.message)
+      console.error("[v0] âŒ Error fetching rankings:", error.message)
       return null
     }
 
@@ -534,15 +540,15 @@ export async function fetchUserRanking(provinceId: string): Promise<number | nul
     const position = data.findIndex((p) => String(p.id) === provinceIdString)
 
     if (position === -1) {
-      console.warn("[v0] ⚠️ Province not found in rankings")
+      console.warn("[v0] âš ï¸ Province not found in rankings")
       return null
     }
 
     const ranking = position + 1 // Convert to 1-based
-    console.log("[v0] ✅ User ranking:", ranking, "out of", data.length)
+    console.log("[v0] âœ… User ranking:", ranking, "out of", data.length)
     return ranking
   } catch (error: any) {
-    console.error("[v0] 💥 Critical error fetching ranking:", error)
+    console.error("[v0] ðŸ’¥ Critical error fetching ranking:", error)
     return null
   }
 }

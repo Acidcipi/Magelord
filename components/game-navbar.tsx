@@ -7,6 +7,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Sparkles, Crown, MessageSquare } from "lucide-react"
+import { LogOut, ChevronDown, Shield } from "lucide-react"
 import { LanguageSelector } from "@/components/language-selector"
 import type { Language } from "@/lib/i18n"
 import { useTranslation } from "@/lib/i18n"
@@ -63,8 +64,38 @@ export function GameNavbar({ activeMenu, setActiveMenu, language, setLanguage }:
           </Button>
         </div>
 
-        <div className="flex items-center">
+        {/* Right side: Username + Admin Panel + Language + Logout */}
+        <div className="flex items-center gap-3">
+          {/* Nombre de usuario */}
+          <span className="text-[#d4af37] font-semibold hidden md:inline">
+            {username}
+          </span>
+
+          {/* Botón Panel Admin (solo para admin+) */}
+          {(userRoles.includes("web_admin") || userRoles.includes("admin") || userRoles.includes("owner")) && (
+            <Button
+              onClick={() => setActivePage("admin-dashboard")}
+              variant="outline"
+              size="sm"
+              className="border-red-500 text-red-400 hover:bg-red-500/10"
+            >
+              <Shield className="mr-2 h-4 w-4" />
+              Panel Admin
+            </Button>
+          )}
+
           <LanguageSelector currentLang={language} onLanguageChange={setLanguage} />
+          <Button
+            variant="outline"
+            onClick={() => {
+              console.log("[v0] 🖱️ Logout button clicked")
+              onLogout()
+            }}
+            className="border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37]/10 bg-transparent"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            {t.logout}
+          </Button>
         </div>
       </div>
     </nav>

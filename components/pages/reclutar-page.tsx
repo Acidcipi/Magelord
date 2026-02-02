@@ -160,7 +160,7 @@ export function ReclutarPage({ language, gameState, onUpdate }: ReclutarPageProp
         p_turnos: turns,
       })
 
-      const { error } = await supabase.rpc("entrenar_unidades", {
+      const { error } = await supabase.rpc("entrenar_unidades_sin_limite", {
         p_province_id: gameState.province_id,
         p_unit_id: unit.id,
         p_turnos: turns,

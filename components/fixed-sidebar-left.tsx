@@ -39,7 +39,13 @@ export function FixedSidebarLeft({ language, gameState, user }: FixedSidebarLeft
       }
     }
 
+    // Cargar inmediatamente
     fetchTopPlayers()
+    
+    // Refrescar cada 30 segundos
+    const interval = setInterval(fetchTopPlayers, 30000)
+    
+    return () => clearInterval(interval)
   }, [])
 
   if (!isMounted) {
@@ -52,7 +58,7 @@ export function FixedSidebarLeft({ language, gameState, user }: FixedSidebarLeft
         <h3 className="text-white font-bold text-lg mb-1">{gameState?.name || "Mi Provincia"}</h3>
         <p className="text-amber-400 text-sm font-semibold mb-1">{String(gameState?.faction || "Unknown")}</p>
         <p className="text-slate-400 text-xs">
-          {String(gameState?.class_type || "Unknown")} • {String(gameState?.alignment || "Neutral")}
+          {String(gameState?.class_type || "Unknown")} â€¢ {String(gameState?.alignment || "Neutral")}
         </p>
       </div>
 

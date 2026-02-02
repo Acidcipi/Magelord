@@ -13,6 +13,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Swords,
 } from "lucide-react"
 import { supabase } from "@/lib/supabaseClient"
 import { Card } from "@/components/ui/card"
@@ -45,26 +46,65 @@ export function RankingsPage({ language, gameState }: RankingsPageProps) {
 
     try {
       let orderBy = "networth"
-      if (activeTab === "land") orderBy = "land"
-      if (activeTab === "population") orderBy = "population"
+      let rankingsData: any[] = [] // 🔥 DECLARAR AQUÍ
+      
+      if (activeTab === "army") {
+        // Para ejército, usar la vista
+        const { data, error } = await supabase
+          .from("view_army_rankings")
+          .select("*")
+          .order("total_units", { ascending: false })
+        
+        if (error) {
+          console.error("[v0] ❌ Rankings fetch error:", error)
+          setLoading(false)
+          return
+        }
+        
+        // Cargar los datos de usuario manualmente
+        const enrichedData = await Promise.all(
+          (data || []).map(async (province: any) => {
+            const { data: userData } = await supabase
+              .from("users")
+              .select("username, faction")
+              .eq("id", province.user_id)
+              .single()
+            
+            return {
+              ...province,
+              users: userData
+            }
+          })
+        )
+        
+        rankingsData = enrichedData || []
+        setAllRankings(rankingsData)
+      } else {
+        // Para otros rankings, usar la tabla normal
+        if (activeTab === "land") orderBy = "land"
+        if (activeTab === "population") orderBy = "population"
 
-      const { data, error } = await supabase
-        .from("provinces")
-        .select("id, name, land, networth, population, user_id, users!inner(username, faction)")
-        .order(orderBy, { ascending: false })
+        const { data, error } = await supabase
+          .from("provinces")
+          .select("id, name, land, networth, population, user_id, users!inner(username, faction)")
+          .order(orderBy, { ascending: false })
 
-      if (error) {
-        console.error("[v0] ❌ Rankings fetch error:", error)
-        return
+        if (error) {
+          console.error("[v0] ❌ Rankings fetch error:", error)
+          setLoading(false)
+          return
+        }
+
+        rankingsData = data || []
+        setAllRankings(rankingsData)
       }
 
-      setAllRankings(data || [])
-
-      if (gameState?.province_id && data) {
-        const rank = data.findIndex((p: any) => p.id === gameState.province_id)
+      // 🔥 AHORA rankingsData ESTÁ DEFINIDO AQUÍ
+      if (gameState?.province_id && rankingsData.length > 0) {
+        const rank = rankingsData.findIndex((p: any) => p.id === gameState.province_id)
         if (rank !== -1) {
           setPlayerRank(rank + 1)
-          setPlayerData(data[rank])
+          setPlayerData(rankingsData[rank])
 
           const playerPage = Math.ceil((rank + 1) / itemsPerPage)
           setCurrentPage(playerPage)
@@ -186,12 +226,14 @@ export function RankingsPage({ language, gameState }: RankingsPageProps) {
   const getActiveMetric = () => {
     if (activeTab === "land") return playerData?.land
     if (activeTab === "population") return playerData?.population
+    if (activeTab === "army") return playerData?.total_units  // AÑADIR ESTO
     return playerData?.networth
   }
 
   const getMetricLabel = () => {
     if (activeTab === "land") return language === "es" ? "Tierras" : "Land"
     if (activeTab === "population") return language === "es" ? "Población" : "Population"
+    if (activeTab === "army") return language === "es" ? "Tropas" : "Troops"  
     return language === "es" ? "Poder" : "Power"
   }
 
@@ -218,6 +260,10 @@ export function RankingsPage({ language, gameState }: RankingsPageProps) {
           <TabsTrigger value="guilds" className="data-[state=active]:bg-[#d4af37] data-[state=active]:text-black">
             <Building2 className="h-4 w-4 mr-2" />
             {language === "es" ? "Gremios" : "Guilds"}
+          </TabsTrigger>
+          <TabsTrigger value="army" className="data-[state=active]:bg-[#d4af37] data-[state=active]:text-black">
+            <Swords className="h-4 w-4 mr-2" />
+            {language === "es" ? "Ejército" : "Army"}
           </TabsTrigger>
           <TabsTrigger value="land" className="data-[state=active]:bg-[#d4af37] data-[state=active]:text-black">
             <MapPin className="h-4 w-4 mr-2" />
@@ -459,6 +505,107 @@ export function RankingsPage({ language, gameState }: RankingsPageProps) {
             </table>
           </Card>
           {renderPagination()}
+        </TabsContent>
+        
+        {/* Army Tab */}
+        <TabsContent value="army" className="space-y-4">
+          {playerRank && playerData && (
+            <Card className="bg-gradient-to-r from-red-900/30 to-red-950/30 border-red-600 p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-red-400 text-sm font-semibold mb-1">
+                    {language === "es" ? "Tu Posición en Ejército" : "Your Army Position"}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <span className="text-4xl font-bold text-[#d4af37]">#{playerRank}</span>
+                    <div>
+                      <p className="text-white font-semibold text-lg">{playerData.name}</p>
+                      <p className="text-red-300 text-sm">
+                        {getMetricLabel()}: {Number(getActiveMetric() ?? 0).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <Button onClick={goToPlayerPage} className="bg-[#d4af37] text-black hover:bg-[#d4af37]/80">
+                  {language === "es" ? "Ver mi posición" : "View my position"}
+                </Button>
+              </div>
+            </Card>
+          )}
+
+          {loading ? (
+            <Card className="bg-slate-900/50 border-red-700/50 p-8 text-center">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#d4af37] border-t-transparent mx-auto"></div>
+            </Card>
+          ) : (
+            <>
+              <Card className="bg-slate-900/50 border-red-700/50 overflow-hidden">
+                <table className="w-full">
+                  <thead className="bg-red-950/30 border-b border-red-700/50">
+                    <tr>
+                      <th className="p-3 text-left text-red-400 font-bold">
+                        {language === "es" ? "Puesto" : "Rank"}
+                      </th>
+                      <th className="p-3 text-left text-red-400 font-bold">
+                        {language === "es" ? "Provincia" : "Province"}
+                      </th>
+                      <th className="p-3 text-left text-red-400 font-bold">
+                        {language === "es" ? "Facción" : "Faction"}
+                      </th>
+                      <th className="p-3 text-right text-red-400 font-bold">
+                        {language === "es" ? "Total Tropas" : "Total Troops"}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentRankings.map((province, index) => {
+                      const globalRank = startIndex + index + 1
+                      const isCurrentPlayer = province.id === gameState?.province_id
+
+                      return (
+                        <tr
+                          key={province.id}
+                          className={`border-b border-slate-700 hover:bg-red-950/20 transition-colors ${
+                            isCurrentPlayer ? "bg-red-900/30 border-red-600" : ""
+                          }`}
+                        >
+                          <td className="p-3">
+                            <div className="flex items-center gap-2">
+                              {getRankIcon(globalRank)}
+                              <span
+                                className={`font-bold text-lg ${globalRank <= 3 ? "text-red-400" : "text-slate-300"}`}
+                              >
+                                #{globalRank}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="p-3">
+                            <div>
+                              <p className="text-white font-semibold">{province.name}</p>
+                              <p className="text-slate-400 text-sm">
+                                {province.users?.username || language === "es" ? "Desconocido" : "Unknown"}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="p-3">
+                            <span className="text-amber-300 capitalize">
+                              {province.users?.faction || language === "es" ? "Neutral" : "Neutral"}
+                            </span>
+                          </td>
+                          <td className="p-3 text-right">
+                            <span className="text-slate-200 font-bold text-lg">
+                              {Number(province.total_units || 0).toLocaleString()}
+                            </span>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </Card>
+              {renderPagination()}
+            </>
+          )}
         </TabsContent>
 
         {/* Guilds Tab */}

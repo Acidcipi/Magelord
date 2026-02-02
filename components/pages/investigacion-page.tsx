@@ -27,6 +27,7 @@ interface InvestigacionPageProps {
   language: Language
   user: any
   gameState: any
+  onUpdate: () => Promise<void>
 }
 
 type ResearchTab = "UNIT" | "SPELL" | "RITUAL" | null
@@ -45,7 +46,7 @@ interface ResearchOption {
   research_turns?: number
 }
 
-export function InvestigacionPage({ language, user, gameState }: InvestigacionPageProps) {
+export function InvestigacionPage({ language, user, gameState, onUpdate }: InvestigacionPageProps) {
   const [mounted, setMounted] = useState(false)
   const { toast } = useToast()
 

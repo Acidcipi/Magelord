@@ -1,109 +1,273 @@
+/* ============================================================================
+   MAGELORD - GLOBAL STYLES (APP DIRECTORY)
+   ============================================================================
+   
+   Archivo principal de estilos globales para Next.js App Router.
+   Ubicación: /app/globals.css
+   
+   DIFERENCIA con /styles/globals.css:
+   - Este archivo usa un tema DORADO (#d4af37) como color principal
+   - Fondo más oscuro (oklch 0.04 vs 1.0)
+   - Optimizado para el diseño dark fantasy de MageLord
+   - Incluye estilos de autofill para inputs
+   
+   Estructura:
+   1. Imports de Tailwind
+   2. Variables CSS (Tema Oscuro Dorado)
+   3. Variables CSS (Dark Mode)
+   4. Tema Tailwind Inline
+   5. Estilos Base + Autofill
+   
+   ============================================================================ */
+
+/* ============================================================================
+   1. IMPORTS - TAILWIND CSS v4
+   ============================================================================ */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Custom variant para tema oscuro */
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================================
+   2. VARIABLES CSS - TEMA OSCURO DORADO (Por defecto)
+   ============================================================================
+   
+   Este es el tema PRINCIPAL de MageLord.
+   Color dorado: #d4af37 (oklch 0.82 0.08 85)
+   Fondo oscuro: #0a0a0a (oklch 0.04 0 0)
+   
+   ============================================================================ */
+
 :root {
-  --background: oklch(0.04 0 0);
-  --foreground: oklch(0.82 0.08 85);
-  --card: oklch(0.04 0 0);
-  --card-foreground: oklch(0.82 0.08 85);
-  --popover: oklch(0.04 0 0);
-  --popover-foreground: oklch(0.82 0.08 85);
-  --primary: oklch(0.82 0.08 85);
-  --primary-foreground: oklch(0.04 0 0);
-  --secondary: oklch(0.15 0 0);
-  --secondary-foreground: oklch(0.82 0.08 85);
-  --muted: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.6 0.05 85);
-  --accent: oklch(0.82 0.08 85);
-  --accent-foreground: oklch(0.04 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.82 0.08 85);
-  --border: oklch(0.82 0.02 85 / 0.2);
-  --input: oklch(0.82 0.02 85 / 0.3);
-  --ring: oklch(0.82 0.08 85);
-  --chart-1: oklch(0.82 0.08 85);
-  --chart-2: oklch(0.6 0.05 85);
-  --chart-3: oklch(0.4 0.03 85);
-  --chart-4: oklch(0.7 0.06 85);
-  --chart-5: oklch(0.5 0.04 85);
-  --radius: 0.5rem;
-  --sidebar: oklch(0.08 0 0);
-  --sidebar-foreground: oklch(0.82 0.08 85);
-  --sidebar-primary: oklch(0.82 0.08 85);
-  --sidebar-primary-foreground: oklch(0.04 0 0);
-  --sidebar-accent: oklch(0.15 0 0);
-  --sidebar-accent-foreground: oklch(0.82 0.08 85);
-  --sidebar-border: oklch(0.82 0.02 85 / 0.2);
-  --sidebar-ring: oklch(0.82 0.08 85);
+  /* ========================================================================
+     COLORES DE FONDO Y TEXTO PRINCIPAL
+     ======================================================================== */
+  
+  --background: oklch(0.04 0 0);                    /* Negro muy oscuro (#0a0a0a) */
+  --foreground: oklch(0.82 0.08 85);                /* Dorado claro (#d4af37) */
+  
+  /* ========================================================================
+     COLORES DE TARJETAS (CARDS)
+     ======================================================================== */
+  
+  --card: oklch(0.04 0 0);                          /* Fondo negro oscuro */
+  --card-foreground: oklch(0.82 0.08 85);           /* Texto dorado */
+  
+  /* ========================================================================
+     COLORES DE POPOVERS (MENÚS EMERGENTES)
+     ======================================================================== */
+  
+  --popover: oklch(0.04 0 0);                       /* Fondo negro oscuro */
+  --popover-foreground: oklch(0.82 0.08 85);        /* Texto dorado */
+  
+  /* ========================================================================
+     COLORES PRIMARIOS (BOTONES PRINCIPALES)
+     ======================================================================== */
+  
+  --primary: oklch(0.82 0.08 85);                   /* Dorado (#d4af37) */
+  --primary-foreground: oklch(0.04 0 0);            /* Texto negro */
+  
+  /* ========================================================================
+     COLORES SECUNDARIOS
+     ======================================================================== */
+  
+  --secondary: oklch(0.15 0 0);                     /* Gris muy oscuro */
+  --secondary-foreground: oklch(0.82 0.08 85);      /* Texto dorado */
+  
+  /* ========================================================================
+     COLORES ATENUADOS (ELEMENTOS DESHABILITADOS)
+     ======================================================================== */
+  
+  --muted: oklch(0.15 0 0);                         /* Gris muy oscuro */
+  --muted-foreground: oklch(0.6 0.05 85);           /* Dorado atenuado */
+  
+  /* ========================================================================
+     COLORES DE ACENTO (ELEMENTOS INTERACTIVOS)
+     ======================================================================== */
+  
+  --accent: oklch(0.82 0.08 85);                    /* Dorado */
+  --accent-foreground: oklch(0.04 0 0);             /* Texto negro */
+  
+  /* ========================================================================
+     COLORES DESTRUCTIVOS (ERRORES, ELIMINAR)
+     ======================================================================== */
+  
+  --destructive: oklch(0.577 0.245 27.325);         /* Rojo */
+  --destructive-foreground: oklch(0.82 0.08 85);    /* Texto dorado */
+  
+  /* ========================================================================
+     ELEMENTOS DE INTERFAZ (BORDES, INPUTS, FOCUS)
+     ======================================================================== */
+  
+  --border: oklch(0.82 0.02 85 / 0.2);              /* Dorado semi-transparente 20% */
+  --input: oklch(0.82 0.02 85 / 0.3);               /* Dorado semi-transparente 30% */
+  --ring: oklch(0.82 0.08 85);                      /* Dorado para focus rings */
+  
+  /* ========================================================================
+     COLORES PARA GRÁFICOS (CHARTS)
+     ======================================================================== */
+  
+  --chart-1: oklch(0.82 0.08 85);                   /* Dorado principal */
+  --chart-2: oklch(0.6 0.05 85);                    /* Dorado medio */
+  --chart-3: oklch(0.4 0.03 85);                    /* Dorado oscuro */
+  --chart-4: oklch(0.7 0.06 85);                    /* Dorado claro */
+  --chart-5: oklch(0.5 0.04 85);                    /* Dorado medio-oscuro */
+  
+  /* ========================================================================
+     RADIO DE BORDE GLOBAL
+     ======================================================================== */
+  
+  --radius: 0.5rem;                                 /* 8px - Bordes redondeados */
+  
+  /* ========================================================================
+     SIDEBAR (BARRA LATERAL)
+     ======================================================================== */
+  
+  --sidebar: oklch(0.08 0 0);                       /* Casi negro */
+  --sidebar-foreground: oklch(0.82 0.08 85);        /* Texto dorado */
+  --sidebar-primary: oklch(0.82 0.08 85);           /* Dorado */
+  --sidebar-primary-foreground: oklch(0.04 0 0);    /* Texto negro */
+  --sidebar-accent: oklch(0.15 0 0);                /* Gris muy oscuro */
+  --sidebar-accent-foreground: oklch(0.82 0.08 85); /* Texto dorado */
+  --sidebar-border: oklch(0.82 0.02 85 / 0.2);      /* Borde dorado semi-transparente */
+  --sidebar-ring: oklch(0.82 0.08 85);              /* Focus ring dorado */
 }
+
+/* ============================================================================
+   3. VARIABLES CSS - DARK MODE (Tema alternativo)
+   ============================================================================
+   
+   Se activa con la clase .dark en el elemento raíz.
+   Usa colores más neutros (grises y blancos) en lugar de dorado.
+   
+   ============================================================================ */
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Colores de fondo y texto principal */
+  --background: oklch(0.145 0 0);                   /* Negro casi puro */
+  --foreground: oklch(0.985 0 0);                   /* Blanco casi puro */
+  
+  /* Colores de tarjetas */
+  --card: oklch(0.145 0 0);                         /* Fondo oscuro */
+  --card-foreground: oklch(0.985 0 0);              /* Texto claro */
+  
+  /* Colores de popovers */
+  --popover: oklch(0.145 0 0);                      /* Fondo oscuro */
+  --popover-foreground: oklch(0.985 0 0);           /* Texto claro */
+  
+  /* Colores primarios */
+  --primary: oklch(0.985 0 0);                      /* Blanco casi puro */
+  --primary-foreground: oklch(0.205 0 0);           /* Negro casi puro */
+  
+  /* Colores secundarios */
+  --secondary: oklch(0.269 0 0);                    /* Gris oscuro */
+  --secondary-foreground: oklch(0.985 0 0);         /* Texto claro */
+  
+  /* Colores atenuados */
+  --muted: oklch(0.269 0 0);                        /* Gris oscuro */
+  --muted-foreground: oklch(0.708 0 0);             /* Gris medio-claro */
+  
+  /* Colores de acento */
+  --accent: oklch(0.269 0 0);                       /* Gris oscuro */
+  --accent-foreground: oklch(0.985 0 0);            /* Texto claro */
+  
+  /* Colores destructivos */
+  --destructive: oklch(0.396 0.141 25.723);         /* Rojo oscuro */
+  --destructive-foreground: oklch(0.637 0.237 25.331); /* Rojo claro */
+  
+  /* Elementos de interfaz */
+  --border: oklch(0.269 0 0);                       /* Gris oscuro */
+  --input: oklch(0.269 0 0);                        /* Gris oscuro */
+  --ring: oklch(0.439 0 0);                         /* Gris medio */
+  
+  /* Colores para gráficos */
+  --chart-1: oklch(0.488 0.243 264.376);            /* Púrpura */
+  --chart-2: oklch(0.696 0.17 162.48);              /* Cian */
+  --chart-3: oklch(0.769 0.188 70.08);              /* Verde */
+  --chart-4: oklch(0.627 0.265 303.9);              /* Magenta */
+  --chart-5: oklch(0.645 0.246 16.439);             /* Naranja */
+  
+  /* Sidebar */
+  --sidebar: oklch(0.205 0 0);                      /* Negro casi puro */
+  --sidebar-foreground: oklch(0.985 0 0);           /* Texto claro */
+  --sidebar-primary: oklch(0.488 0.243 264.376);    /* Púrpura */
+  --sidebar-primary-foreground: oklch(0.985 0 0);   /* Texto claro */
+  --sidebar-accent: oklch(0.269 0 0);               /* Gris oscuro */
+  --sidebar-accent-foreground: oklch(0.985 0 0);    /* Texto claro */
+  --sidebar-border: oklch(0.269 0 0);               /* Borde oscuro */
+  --sidebar-ring: oklch(0.439 0 0);                 /* Focus ring */
 }
 
+/* ============================================================================
+   4. TEMA TAILWIND INLINE
+   ============================================================================
+   
+   Mapeo de variables CSS a clases de Tailwind.
+   Permite usar: bg-background, text-foreground, border-border, etc.
+   
+   ============================================================================ */
+
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
+  /* 
+   * OPCIONAL: Descomentar si usas fuentes personalizadas en layout.tsx
+   * --font-sans
+   * --font-serif
+   * --font-mono
+   */
+  
+  /* Colores de fondo y texto */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  
+  /* Tarjetas */
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  
+  /* Popovers */
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+  
+  /* Colores primarios */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  
+  /* Colores secundarios */
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  
+  /* Colores atenuados */
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  
+  /* Colores de acento */
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  
+  /* Colores destructivos */
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  
+  /* Elementos de interfaz */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  
+  /* Gráficos */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Radio de borde (border-radius) */
+  --radius-sm: calc(var(--radius) - 4px);          /* Small: 4px */
+  --radius-md: calc(var(--radius) - 2px);          /* Medium: 6px */
+  --radius-lg: var(--radius);                      /* Large: 8px */
+  --radius-xl: calc(var(--radius) + 4px);          /* Extra Large: 12px */
+  
+  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -114,20 +278,76 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ============================================================================
+   5. ESTILOS BASE
+   ============================================================================
+   
+   Aplicación global de bordes, colores y estilos de autofill.
+   
+   ============================================================================ */
+
 @layer base {
+  /* 
+   * TODOS LOS ELEMENTOS:
+   * - Bordes usan color --border
+   * - Outline usan color --ring con 50% opacidad
+   */
   * {
     @apply border-border outline-ring/50;
   }
+  
+  /* 
+   * BODY GLOBAL:
+   * - Fondo: --background
+   * - Texto: --foreground
+   */
   body {
     @apply bg-background text-foreground;
   }
 
+  /* ========================================================================
+     ESTILOS DE AUTOFILL PARA INPUTS
+     ========================================================================
+     
+     Cuando el navegador autocompleta un input, estos estilos evitan
+     que el fondo se vuelva blanco/amarillo y mantienen el tema dorado.
+     
+     Aplica a: Chrome, Safari, Edge (navegadores Webkit)
+     
+     ======================================================================== */
+  
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
+    /* Fondo negro oscuro con box-shadow (hack para Webkit) */
     -webkit-box-shadow: 0 0 0 30px #0a0a0a inset !important;
+    
+    /* Texto dorado */
     -webkit-text-fill-color: #d4af37 !important;
+    
+    /* Cursor dorado */
     caret-color: #d4af37 !important;
   }
 }
+
+/* ============================================================================
+   NOTAS DE USO
+   ============================================================================
+   
+   1. DIFERENCIAS CON /styles/globals.css:
+      - Este archivo usa tema DORADO por defecto
+      - /styles/globals.css usa tema BLANCO/NEGRO por defecto
+      - Ambos tienen modo .dark pero con colores diferentes
+   
+   2. USO RECOMENDADO:
+      - Usa ESTE archivo (app/globals.css) para el juego MageLord
+      - Usa /styles/globals.css para páginas de landing/marketing
+   
+   3. COLORES PRINCIPALES:
+      - Dorado: #d4af37 (oklch 0.82 0.08 85)
+      - Negro: #0a0a0a (oklch 0.04 0 0)
+      - Rojo: oklch(0.577 0.245 27.325)
+   
+   ============================================================================ */
+

@@ -1,109 +1,230 @@
+/* ============================================================================
+   MAGELORD - GLOBAL STYLES
+   ============================================================================
+   
+   Archivo principal de estilos globales del proyecto MageLord.
+   Configuración de Tailwind CSS v4+ con tema claro/oscuro.
+   
+   Estructura:
+   1. Imports de Tailwind
+   2. Variables CSS (Light Mode)
+   3. Variables CSS (Dark Mode)
+   4. Tema Tailwind Inline
+   5. Estilos Base
+   
+   ============================================================================ */
+
+/* ============================================================================
+   1. IMPORTS - TAILWIND CSS v4
+   ============================================================================ */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Custom variant para tema oscuro */
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================================
+   2. VARIABLES CSS - LIGHT MODE (Tema Claro)
+   ============================================================================
+   
+   Sistema de colores usando OKLCH (mejor que HSL para interpolación)
+   Formato: oklch(lightness chroma hue)
+   
+   ============================================================================ */
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Colores de fondo y texto principal */
+  --background: oklch(1 0 0);                    /* Blanco puro */
+  --foreground: oklch(0.145 0 0);                /* Negro casi puro */
+  
+  /* Colores de tarjetas (cards) */
+  --card: oklch(1 0 0);                          /* Fondo blanco */
+  --card-foreground: oklch(0.145 0 0);           /* Texto oscuro */
+  
+  /* Colores de popovers (menús emergentes) */
+  --popover: oklch(1 0 0);                       /* Fondo blanco */
+  --popover-foreground: oklch(0.145 0 0);        /* Texto oscuro */
+  
+  /* Colores primarios (botones principales, elementos destacados) */
+  --primary: oklch(0.205 0 0);                   /* Gris muy oscuro */
+  --primary-foreground: oklch(0.985 0 0);        /* Blanco casi puro */
+  
+  /* Colores secundarios */
+  --secondary: oklch(0.97 0 0);                  /* Gris muy claro */
+  --secondary-foreground: oklch(0.205 0 0);      /* Gris muy oscuro */
+  
+  /* Colores atenuados (elementos deshabilitados o secundarios) */
+  --muted: oklch(0.97 0 0);                      /* Gris muy claro */
+  --muted-foreground: oklch(0.556 0 0);          /* Gris medio */
+  
+  /* Colores de acento (elementos interactivos) */
+  --accent: oklch(0.97 0 0);                     /* Gris muy claro */
+  --accent-foreground: oklch(0.205 0 0);         /* Gris muy oscuro */
+  
+  /* Colores destructivos (botones de eliminar, errores) */
+  --destructive: oklch(0.577 0.245 27.325);      /* Rojo */
+  --destructive-foreground: oklch(0.577 0.245 27.325); /* Rojo */
+  
+  /* Elementos de interfaz */
+  --border: oklch(0.922 0 0);                    /* Gris muy claro para bordes */
+  --input: oklch(0.922 0 0);                     /* Gris muy claro para inputs */
+  --ring: oklch(0.708 0 0);                      /* Gris medio para focus rings */
+  
+  /* Colores para gráficos (charts) */
+  --chart-1: oklch(0.646 0.222 41.116);          /* Naranja */
+  --chart-2: oklch(0.6 0.118 184.704);           /* Azul */
+  --chart-3: oklch(0.398 0.07 227.392);          /* Azul oscuro */
+  --chart-4: oklch(0.828 0.189 84.429);          /* Verde claro */
+  --chart-5: oklch(0.769 0.188 70.08);           /* Verde */
+  
+  /* Radio de borde global */
+  --radius: 0.625rem;                            /* 10px - Bordes redondeados */
+  
+  /* Sidebar (barra lateral) */
+  --sidebar: oklch(0.985 0 0);                   /* Blanco casi puro */
+  --sidebar-foreground: oklch(0.145 0 0);        /* Texto oscuro */
+  --sidebar-primary: oklch(0.205 0 0);           /* Elementos destacados oscuros */
+  --sidebar-primary-foreground: oklch(0.985 0 0); /* Texto blanco */
+  --sidebar-accent: oklch(0.97 0 0);             /* Acento claro */
+  --sidebar-accent-foreground: oklch(0.205 0 0); /* Texto acento oscuro */
+  --sidebar-border: oklch(0.922 0 0);            /* Borde claro */
+  --sidebar-ring: oklch(0.708 0 0);              /* Focus ring */
 }
+
+/* ============================================================================
+   3. VARIABLES CSS - DARK MODE (Tema Oscuro)
+   ============================================================================
+   
+   Paleta de colores optimizada para tema oscuro.
+   Se activa automáticamente con la clase .dark en el elemento raíz.
+   
+   ============================================================================ */
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Colores de fondo y texto principal */
+  --background: oklch(0.145 0 0);                /* Negro casi puro */
+  --foreground: oklch(0.985 0 0);                /* Blanco casi puro */
+  
+  /* Colores de tarjetas */
+  --card: oklch(0.145 0 0);                      /* Fondo oscuro */
+  --card-foreground: oklch(0.985 0 0);           /* Texto claro */
+  
+  /* Colores de popovers */
+  --popover: oklch(0.145 0 0);                   /* Fondo oscuro */
+  --popover-foreground: oklch(0.985 0 0);        /* Texto claro */
+  
+  /* Colores primarios */
+  --primary: oklch(0.985 0 0);                   /* Blanco casi puro */
+  --primary-foreground: oklch(0.205 0 0);        /* Negro casi puro */
+  
+  /* Colores secundarios */
+  --secondary: oklch(0.269 0 0);                 /* Gris oscuro */
+  --secondary-foreground: oklch(0.985 0 0);      /* Texto claro */
+  
+  /* Colores atenuados */
+  --muted: oklch(0.269 0 0);                     /* Gris oscuro */
+  --muted-foreground: oklch(0.708 0 0);          /* Gris medio-claro */
+  
+  /* Colores de acento */
+  --accent: oklch(0.269 0 0);                    /* Gris oscuro */
+  --accent-foreground: oklch(0.985 0 0);         /* Texto claro */
+  
+  /* Colores destructivos */
+  --destructive: oklch(0.396 0.141 25.723);      /* Rojo oscuro */
+  --destructive-foreground: oklch(0.637 0.237 25.331); /* Rojo claro */
+  
+  /* Elementos de interfaz */
+  --border: oklch(0.269 0 0);                    /* Gris oscuro para bordes */
+  --input: oklch(0.269 0 0);                     /* Gris oscuro para inputs */
+  --ring: oklch(0.439 0 0);                      /* Gris medio para focus rings */
+  
+  /* Colores para gráficos */
+  --chart-1: oklch(0.488 0.243 264.376);         /* Púrpura */
+  --chart-2: oklch(0.696 0.17 162.48);           /* Cian */
+  --chart-3: oklch(0.769 0.188 70.08);           /* Verde */
+  --chart-4: oklch(0.627 0.265 303.9);           /* Magenta */
+  --chart-5: oklch(0.645 0.246 16.439);          /* Naranja */
+  
+  /* Sidebar */
+  --sidebar: oklch(0.205 0 0);                   /* Negro casi puro */
+  --sidebar-foreground: oklch(0.985 0 0);        /* Texto claro */
+  --sidebar-primary: oklch(0.488 0.243 264.376); /* Púrpura */
+  --sidebar-primary-foreground: oklch(0.985 0 0); /* Texto claro */
+  --sidebar-accent: oklch(0.269 0 0);            /* Gris oscuro */
+  --sidebar-accent-foreground: oklch(0.985 0 0); /* Texto claro */
+  --sidebar-border: oklch(0.269 0 0);            /* Borde oscuro */
+  --sidebar-ring: oklch(0.439 0 0);              /* Focus ring */
 }
 
+/* ============================================================================
+   4. TEMA TAILWIND INLINE
+   ============================================================================
+   
+   Mapeo de variables CSS a clases de Tailwind.
+   Permite usar: bg-background, text-foreground, border-border, etc.
+   
+   ============================================================================ */
+
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
+  /* 
+   * OPCIONAL: Descomentar si usas fuentes personalizadas en layout.tsx
+   * --font-sans
+   * --font-serif
+   * --font-mono
+   */
+  
+  /* Colores de fondo y texto */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  
+  /* Tarjetas */
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  
+  /* Popovers */
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+  
+  /* Colores primarios */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  
+  /* Colores secundarios */
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  
+  /* Colores atenuados */
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  
+  /* Colores de acento */
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  
+  /* Colores destructivos */
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  
+  /* Elementos de interfaz */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  
+  /* Gráficos */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Radio de borde (border-radius) */
+  --radius-sm: calc(var(--radius) - 4px);       /* Small: 6px */
+  --radius-md: calc(var(--radius) - 2px);       /* Medium: 8px */
+  --radius-lg: var(--radius);                   /* Large: 10px */
+  --radius-xl: calc(var(--radius) + 4px);       /* Extra Large: 14px */
+  
+  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -114,10 +235,30 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ============================================================================
+   5. ESTILOS BASE
+   ============================================================================
+   
+   Aplicación global de bordes y colores.
+   Asegura consistencia visual en toda la aplicación.
+   
+   ============================================================================ */
+
 @layer base {
+  /* 
+   * Todos los elementos heredan colores de borde y outline
+   * border-border: usa el color definido en --border
+   * outline-ring/50: usa el color definido en --ring con 50% opacidad
+   */
   * {
     @apply border-border outline-ring/50;
   }
+  
+  /* 
+   * Body global:
+   * - Fondo: usa --background
+   * - Texto: usa --foreground
+   */
   body {
     @apply bg-background text-foreground;
   }

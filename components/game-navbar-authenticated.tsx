@@ -11,6 +11,7 @@ import { LanguageSelector } from "@/components/language-selector"
 import type { Language } from "@/lib/i18n"
 import { useTranslation } from "@/lib/i18n"
 import Image from "next/image"
+import { Shield } from "lucide-react"
 
 interface GameNavbarAuthenticatedProps {
   activeMenu: "home" | "build" | "mages" | "army" | "diplomacy" | "profile"
